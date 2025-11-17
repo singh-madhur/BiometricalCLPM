@@ -1,2 +1,12 @@
 # BiometricalCLPM
-Biometrical CLPM integrates twin developmental and direction-of-causation analyses into twin CLPM. This repo also includes code for applications of the model to smoking quantity and depressive symptoms in TEDS young adults.
+Biometrical CLPM integrates the Genetic Simplex and Direction-of-Causation analyses into twin CLPM. This repo also includes code for applications of the model to smoking quantity and depressive symptoms in TEDS young adults.
+
+**Manucript**
+Singh M., Hunter M.D., Assary E., Verhulst B., Peterson R.E., Maes H.H.M., Dolan C.V.*, Eley T.C.*, & Neale M.C.* (2025; Preprint). Causation Between Smoking Quantity and Depressive Symptoms in Young Adults: Evidence from Novel Cross-Lagged Twin Models. _medRxiv_. 
+
+**Abstract**
+
+**Background**: Smoking and depression often co-occur in young adults, potentially due to reciprocal causal effects and/or shared underlying etiological factors. Here, we tested causal hypotheses between smoking quantity (cigarettes per day; CigDay) and depressive symptoms (DepSx) using novel Biometrical Cross-Lagged Panel Models (CLPMs), which integrate twin developmental and direction-of-causation analyses for more robust causal inference in longitudinal twin studies. 
+**Methods**: Study sample included 10,034 participants (61.6% females; 4,112 twin pairs) from the Twins Early Development Study, with up to six repeated assessments spanning ages 21–29. The Biometrical CLPM provided three key innovations over standard twin CLPM: distinct autoregressive processes of latent genetic and environmental factors; cross-lagged genetic and environmental liabilities, contrasting confounding and causation; and cross-sectional causal effects, distinguishing between proximal (short-term) and distal (lagged) causation. 
+**Results**: Analyses of the two largest study waves, assessed at a four-year interval, showed highly stable genetic liabilities for both variables, with temporally varying environmental influences. The standard CLPM indicated a lagged _CigDay → DepSx_ effect, which became attenuated and non-significant when accounting for the differential genetic and environmental developmental processes in the Biometrical CLPM. Adding the cross-sectional causal paths revealed significant bidirectional proximal effects, with a stronger _CigDay → DepSx_ effect. Consistently, analyses across all six waves with intervals up to two years showed significant bidirectional cross-lagged associations. 
+**Conclusions**: The findings support a reinforcing feedback loop between CigDay and DepSx during young adulthood, involving bidirectional effects that persist for up to two years, but dissipate over longer intervals. 
