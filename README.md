@@ -3,7 +3,7 @@ Biometrical CLPM integrates the Genetic Simplex and Direction-of-Causation analy
 
 **Manucript**
 
-Singh M., Hunter M.D., Assary E., Verhulst B., Peterson R.E., Maes H.H.M., Dolan C.V.*, Eley T.C.*, & Neale M.C.* (2025; Preprint). **Causation Between Smoking Quantity and Depressive Symptoms in Young Adults: Evidence from Novel Cross-Lagged Twin Models**. _medRxiv_. 
+Singh M., Hunter M.D., Assary E., Verhulst B., Peterson R.E., Maes H.H.M., Dolan C.V., Eley T.C., & Neale M.C. (2025; Preprint). **Causation Between Smoking Quantity and Depressive Symptoms in Young Adults: Evidence from Novel Cross-Lagged Twin Models**. _medRxiv_. 
 
 **Abstract**
 
