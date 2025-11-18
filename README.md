@@ -1,5 +1,5 @@
 # BiometricalCLPM
-Biometrical CLPM integrates the Genetic Simplex and Direction-of-Causation analyses into twin CLPM. This repo also includes code for applications of the model to smoking quantity and depressive symptoms in TEDS young adults.
+Biometrical CLPM integrates the Genetic Simplex and Direction-of-Causation analyses into twin CLPM. This repo also includes code for applications of the model to smoking quantity and depressive symptoms in TEDS young-adult participants.
 
 **Manucript**
 
