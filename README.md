@@ -32,7 +32,7 @@ Singh M., Hunter M.D., Assary E., Verhulst B., Peterson R.E., Maes H.H.M., Dolan
     
     1_DataWrangle_Residualise_DepSx_CigDay.R
     
-        General data cleaning, variable formatting, and residualizing the depressive symptom scores.
+        General data cleaning, variable formatting, and residualizing DepSx.
         
     2a_UnivariateACE_DepSx.R; 2b_UnivariateACE_CigDay.R
         
