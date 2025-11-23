@@ -18,30 +18,33 @@ Singh M., Hunter M.D., Assary E., Verhulst B., Peterson R.E., Maes H.H.M., Dolan
 
 **Scripts**
 
-**./Model/Biometrical_CLPM_Model_MultipleTimePoints.R**
-    General script for Biometrical CLPM fitted to two continuous phenotypes, with a a flexible number of time points.
+**./Model**
+    
+    Biometrical_CLPM_Model_MultipleTimePoints.R
+    
+        General script for Biometrical CLPM fitted to two continuous phenotypes, with a a flexible number of time points.
 
 
 **./TEDS**
 
     Scripts used for analyzing the TEDS data presented in the manuscript
     
-    **1_DataWrangle_Residualise_DepSx_CigDay.R**
+    1_DataWrangle_Residualise_DepSx_CigDay.R
     
         General data cleaning, variable formatting, and residualizing the depressive symptom scores.
         
-    **2a_UnivariateACE_DepSx.R; 2b_UnivariateACE_CigDay.R**
+    2a_UnivariateACE_DepSx.R; 2b_UnivariateACE_CigDay.R
         
         Univariate ACE models fitted to DepSx and CigDay assessments.
         
-    **3_Get_DepSx_CigDay_SumStats_for_WLS.R**
+    3_Get_DepSx_CigDay_SumStats_for_WLS.R
     
         Obtain the sum stats for fitting the  2-wave and 6-wave CLPM using WLS.
         
-    **4_BiometricalCLPM_Dep_Smk_TEDS21_26.R**
+    4_BiometricalCLPM_Dep_Smk_TEDS21_26.R
     
         2-wave Standard Twin CLPM and Biometrical CLPM: TEDS21 and TEDS26.
         
-    **5_BiometricalCLPM_Dep_Smk_TEDS21_COVIDall_26.R**
+    5_BiometricalCLPM_Dep_Smk_TEDS21_COVIDall_26.R
         6-wave Standard Twin CLPM and Biometrical CLPM: TEDS21, COVID Phase 1-4, TEDS26.
         
