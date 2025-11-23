@@ -14,3 +14,34 @@ Singh M., Hunter M.D., Assary E., Verhulst B., Peterson R.E., Maes H.H.M., Dolan
 **Results**: In the two largest waves assessed approximately four years apart, genetic liabilities for both variables remained highly stable, while environmental influences showed considerable temporal variation. In the standard CLPM, _CigDay_ predicted _DepSx_ four years later. However, in the Biometrical CLPM, the cross-lagged phenotypic associations were attenuated and non-significant when accounting for the differential genetic and environmental developmental processes. Adding the cross-sectional causal paths revealed significant bidirectional proximal effects, with a stronger _CigDay→DepSx_ effect. Across all six waves with intervals up to two years, analyses consistently showed significant bidirectional cross-lagged associations. 
 
 **Conclusions**: The findings support a reinforcing feedback loop between _CigDay_ and _DepSx_ during young adulthood, involving bidirectional effects that persist for up to two years but dissipate over longer intervals. 
+
+
+**Scripts**
+
+**./Model/Biometrical_CLPM_Model_MultipleTimePoints.R**
+    General script for Biometrical CLPM fitted to two continuous phenotypes, with a a flexible number of time points.
+
+
+**./TEDS**
+
+    Scripts used for analyzing the TEDS data presented in the manuscript
+    
+    **1_DataWrangle_Residualise_DepSx_CigDay.R**
+    
+        General data cleaning, variable formatting, and residualizing the depressive symptom scores.
+        
+    **2a_UnivariateACE_DepSx.R; 2b_UnivariateACE_CigDay.R**
+        
+        Univariate ACE models fitted to DepSx and CigDay assessments.
+        
+    **3_Get_DepSx_CigDay_SumStats_for_WLS.R**
+    
+        Obtain the sum stats for fitting the  2-wave and 6-wave CLPM using WLS.
+        
+    **4_BiometricalCLPM_Dep_Smk_TEDS21_26.R**
+    
+        2-wave Standard Twin CLPM and Biometrical CLPM: TEDS21 and TEDS26.
+        
+    **5_BiometricalCLPM_Dep_Smk_TEDS21_COVIDall_26.R**
+        6-wave Standard Twin CLPM and Biometrical CLPM: TEDS21, COVID Phase 1-4, TEDS26.
+        
