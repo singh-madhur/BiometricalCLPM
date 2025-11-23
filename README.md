@@ -22,7 +22,8 @@ Singh M., Hunter M.D., Assary E., Verhulst B., Peterson R.E., Maes H.H.M., Dolan
     
     Biometrical_CLPM_Model_MultipleTimePoints.R
     
-        General script for Biometrical CLPM fitted to two continuous phenotypes, with a a flexible number of time points.
+        General script for Biometrical CLPM fitted to two continuous phenotypes, 
+        with a flexible number of time points.
 
 
 **./TEDS**
@@ -46,5 +47,6 @@ Singh M., Hunter M.D., Assary E., Verhulst B., Peterson R.E., Maes H.H.M., Dolan
         2-wave Standard Twin CLPM and Biometrical CLPM: TEDS21 and TEDS26.
         
     5_BiometricalCLPM_Dep_Smk_TEDS21_COVIDall_26.R
+    
         6-wave Standard Twin CLPM and Biometrical CLPM: TEDS21, COVID Phase 1-4, TEDS26.
         
