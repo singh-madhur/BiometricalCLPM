@@ -61,13 +61,6 @@ bphyy=.6   #  AR of Y
 bphxy=.1   #  Y --> X causal
 bphyx=.1   #  X --> Y causal
 
-# pheno on prs parameters (X and Y)
-# bx=sqrt(.02)   # prsx -> x
-# by=sqrt(.02)   # prsy -> y
-# vprsx=1
-# vprsy=1
-# rprsxy=.2 
-
 
 #### Means matrix ===============
 
@@ -79,7 +72,8 @@ B0_  <- mxMatrix(
   dimnames = list("b0",labs)
 ) 
 B0_
-#
+
+# Equal means by twin order
 ExpMean <- mxAlgebra(expression=cbind(b0,b0), name='expMean')
 
 
@@ -101,7 +95,7 @@ for (i in 1:Ts) {
     ## Y_i --> X_i+1
     B_vals[paste0("X",i+1), paste0("Y",i)] <- bphxy
   }
-  ## Cross-sectional causal paths (for later use with IVs)
+  ## Cross-sectional causal paths (for later use with DoC)
   ## X_i --> Y_i
   B_vals[paste0("Y",i), paste0("X",i)] <- 0
   ## Y_i --> X_i
@@ -128,7 +122,7 @@ for (i in 1:Ts) {
     ## Y_i --> X_i+1
     B_free[paste0("X",i+1), paste0("Y",i)] <- TRUE
   }
-  ## Cross-sectional causal paths (for later use with IVs)
+  ## Cross-sectional causal paths (for later use with DoC)
   ## X_i --> Y_i
   B_free[paste0("Y",i), paste0("X",i)] <- FALSE
   ## Y_i --> X_i
@@ -491,7 +485,7 @@ modelcausalA  <- mxModel(name="CLPM_phenoAR", pars, modelMZ, modelDZ, multi)
 
 #### RUN MODEL =========================
 fitcausalA    <- mxRun( modelcausalA) 
-# fitcausalA    <- mxTryHard( modelcausalA, 20) 
+# fitcausalA    <- mxTryHard( modelcausalA) 
 sumcausalA    <- summary( fitcausalA )
 sumcausalA
 
@@ -524,14 +518,6 @@ fitcausalA1    <- mxRun( modelcausalA1)
 sumcausalA1    <- summary( fitcausalA1 )
 sumcausalA1
 
-# test ID
-doID=T
-if (doID) {
-  testID2=mxCheckIdentification(fitcausalA1, details=T)
-  print(testID2$non_identified_parameters)
-}  
-# Model is locally identified
-
 
 #### SubModel 2: Cross-Lagged A ======================
 
@@ -544,13 +530,6 @@ fitcausalA2   <- mxRun( modelcausalA2 )
 sumcausalA2   <- summary( fitcausalA2 )
 sumcausalA2
 
-# test ID
-doID=T
-if (doID) {
-  testID2=mxCheckIdentification(fitcausalA2, details=T)
-  print(testID2$non_identified_parameters)
-}  
-# Model is locally identified
 
 
 #### SubModel 3: Cross-Lagged AE ======================
@@ -564,14 +543,6 @@ fitcausalA3   <- mxRun( modelcausalA3 )
 sumcausalA3   <- summary( fitcausalA3 )
 sumcausalA3
 
-# test ID
-doID=T
-if (doID) {
-  testID2=mxCheckIdentification(fitcausalA3, details=T)
-  print(testID2$non_identified_parameters)
-}  
-# Model is locally identified
-
 
 #### SubModel 4: Cross-Lagged AC ======================
 
@@ -583,14 +554,6 @@ modelcausalA4 <- omxSetParameters(modelcausalA4,
 fitcausalA4   <- mxRun( modelcausalA4 )
 sumcausalA4   <- summary( fitcausalA4 )
 sumcausalA4
-
-# test ID
-doID=T
-if (doID) {
-  testID2=mxCheckIdentification(fitcausalA3, details=T)
-  print(testID2$non_identified_parameters)
-}  
-# Model is locally identified
 
 
 #### SubModel 5: Cross-Lagged ACE - No Phenotypical Causal Paths ======================
@@ -605,13 +568,60 @@ fitcausalA5   <- mxRun( modelcausalA5 )
 sumcausalA5   <- summary( fitcausalA5 )
 sumcausalA5
 
-# test ID
-doID=T
-if (doID) {
-  testID2=mxCheckIdentification(fitcausalA5, details=T)
-  print(testID2$non_identified_parameters)
-}  
-# Model is locally identified
 
+#### SubModel 6: DOC Proximal Effects at T2 ======================
+
+modelcausalA6a <- mxModel(fitcausalA5, name = "CLPM_aceAR_DOC2yx_rA")
+modelcausalA6a <- omxSetParameters(modelcausalA6a, 
+                                   labels = c("covExy2"), free = F, values = 0)
+modelcausalA6a <- omxSetParameters(modelcausalA6a, 
+                                   labels = c("Inst_by2x2"), free = T, values = 0.2)
+fitcausalA6a   <- mxRun( modelcausalA6a )
+sumcausalA6a   <- summary(fitcausalA6a )
+sumcausalA6a
+
+
+modelcausalA6b <- mxModel(fitcausalA5, name = "CLPM_aceAR_DOC2xy_rA")
+modelcausalA6b <- omxSetParameters(modelcausalA6b, 
+                                   labels = c("covExy2"), free = F, values = 0)
+modelcausalA6b <- omxSetParameters(modelcausalA6b, 
+                                   labels = c("Inst_bx2y2"), free = T, values = -0.2)
+fitcausalA6b   <- mxRun( modelcausalA6b )
+sumcausalA6b   <- summary(fitcausalA6b )
+sumcausalA6b
+
+
+modelcausalA6c <- mxModel(fitcausalA5, name = "CLPM_aceAR_DOC2yx_rE")
+modelcausalA6c <- omxSetParameters(modelcausalA6c, 
+                                   labels = c("covAxy2"), free = F, values = 0)
+modelcausalA6c <- omxSetParameters(modelcausalA6c, 
+                                   labels = c("Inst_by2x2"), free = T, values = 0.2)
+fitcausalA6c   <- mxRun( modelcausalA6c )
+sumcausalA6c   <- summary(fitcausalA6c )
+sumcausalA6c
+
+
+modelcausalA6d <- mxModel(fitcausalA5, name = "CLPM_aceAR_DOC2xy_rE")
+modelcausalA6d <- omxSetParameters(modelcausalA6d, 
+                                   labels = c("covAxy2"), free = F, values = 0)
+modelcausalA6d <- omxSetParameters(modelcausalA6d, 
+                                   labels = c("Inst_bx2y2"), free = T, values = 0.1)
+fitcausalA6d   <- mxRun( modelcausalA6d )
+sumcausalA6d   <- summary(fitcausalA6d )
+sumcausalA6d
+
+
+modelcausalA6e <- mxModel(fitcausalA5, name = "CLPM_aceAR_DOC2bidir")
+modelcausalA6e <- omxSetParameters(modelcausalA6e, 
+                                   labels = c("covAxy2","covExy2"), free = F, values = 0)
+modelcausalA6e <- omxSetParameters(modelcausalA6e, 
+                                   labels = c("Inst_bx2y2","Inst_by2x2"), free = T, values = -.2)
+fitcausalA6e   <- mxRun( modelcausalA6e )
+sumcausalA6e   <- summary(fitcausalA6e )
+sumcausalA6e
+
+mxCompare(fitcausalA5, list(fitcausalA6e, 
+                            fitcausalA6a, fitcausalA6c,
+                            fitcausalA6b, fitcausalA6d ))
 
 # END ===========

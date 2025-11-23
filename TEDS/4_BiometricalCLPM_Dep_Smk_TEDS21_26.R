@@ -1,10 +1,10 @@
-## Depression + Cigs per Day
-## CLPM - T21 + T26
+## Biometrical CLPM - T21 + T26 (with Full WLS estimator)
+## Depression Sx + Cigs per Day
+## Madhur Singh
 
 rm(list=ls(all=TRUE))
 #
 library(OpenMx)
-# mxOption(NULL, "Default optimizer","CSOLNP")
 #
 
 ##### Read in the data =================
@@ -13,6 +13,8 @@ dataDir <- "Data/"
 outDir  <- "Out/"
 plotDir <- "Plots/"
 logDir  <- "Logs/"
+
+## WLS sum stats from 3_Get_DepSx_CigDay_SumStats_for_WLS.R
 
 load(paste0("Out/MZsumStatDepSmk_T16.RData"))
 str(MZsumStatDepSmk_T16)
@@ -24,6 +26,8 @@ round(cov2cor(DZsumStatDepSmk_T16@observedStats$cov), 2)
 
 # Number of time points
 Ts <- 2
+
+## Note that the two waves are labeled T1 and T6
 
 ##### N. vars =========================
 
@@ -84,13 +88,6 @@ bphyy=.6   #  AR of Y
 bphxy=.1   #  Y --> X causal
 bphyx=.1   #  X --> Y causal
 
-# pheno on prs parameters (X and Y)
-# bx=sqrt(.02)   # prsx -> x
-# by=sqrt(.02)   # prsy -> y
-# vprsx=1
-# vprsy=1
-# rprsxy=.2 
-
 
 #### Means matrix ===============
 
@@ -102,7 +99,8 @@ B0_  <- mxMatrix(
   dimnames = list("b0",labs)
 ) 
 B0_
-#
+
+# Equal means by twin order
 ExpMean <- mxAlgebra(expression=cbind(b0,b0), name='expMean')
 
 
@@ -140,7 +138,7 @@ for (i in c(1,6)) {
     ## CigDay3L_T_i --> DepSxResRN_T_i+1
     B_vals[paste0("DepSxResRN_T",i+5), paste0("CigDay3L_T",i)] <- bphxy
   }
-  ## Cross-sectional causal paths (for later use with IVs)
+  ## Cross-sectional causal paths (for later use with DOC)
   ## DepSxResRN_T_i --> CigDay3L_T_i
   B_vals[paste0("CigDay3L_T",i), paste0("DepSxResRN_T",i)] <- 0
   ## CigDay3L_T_i --> DepSxResRN_T_i
@@ -167,7 +165,7 @@ for (i in c(1,6)) {
     ## CigDay3L_T_i --> DepSxResRN_T_i+1
     B_free[paste0("DepSxResRN_T",i+5), paste0("CigDay3L_T",i)] <- TRUE
   }
-  ## Cross-sectional causal paths (for later use with IVs)
+  ## Cross-sectional causal paths (for later use with DOC)
   ## DepSxResRN_T_i --> CigDay3L_T_i
   B_free[paste0("CigDay3L_T",i), paste0("DepSxResRN_T",i)] <- FALSE
   ## CigDay3L_T_i --> DepSxResRN_T_i
@@ -511,12 +509,18 @@ covP       <- mxAlgebra(expression= iBE%*%V1%*%t(iBE), name='V',
 covMZ      <- mxAlgebra( expression= iBE%*%(VA+VC)%*%t(iBE), name="cMZ" )
 covDZ      <- mxAlgebra( expression= iBE%*%(0.5%x%VA+VC)%*%t(iBE), name="cDZ" )
 #
-expCovMZ   <- mxAlgebra( expression= rbind( cbind(V, cMZ), cbind(t(cMZ), V)), name="expCovMZ" )
-expCovDZ   <- mxAlgebra( expression= rbind( cbind(V, cDZ), cbind(t(cDZ), V)), name="expCovDZ" )
+expCovMZ   <- mxAlgebra( expression= rbind( cbind(V, cMZ), 
+                                            cbind(t(cMZ), V)), name="expCovMZ" )
+expCovDZ   <- mxAlgebra( expression= rbind( cbind(V, cDZ), 
+                                            cbind(t(cDZ), V)), name="expCovDZ" )
 
 # Create Data Objects for Multiple Groups
-dataMZ = mxData( type = "none", observedStats = MZsumStatDepSmk_T16$observedStats, numObs = MZsumStatDepSmk_T16$numObs)
-dataDZ = mxData( type = "none", observedStats = DZsumStatDepSmk_T16$observedStats, numObs = DZsumStatDepSmk_T16$numObs)
+dataMZ = mxData( type = "none", 
+                 observedStats = MZsumStatDepSmk_T16$observedStats, 
+                 numObs = MZsumStatDepSmk_T16$numObs)
+dataDZ = mxData( type = "none", 
+                 observedStats = DZsumStatDepSmk_T16$observedStats, 
+                 numObs = DZsumStatDepSmk_T16$numObs)
 
 # Create Expectation Objects for Multiple Groups
 expMZ     <- mxExpectationNormal( covariance="expCovMZ", means="expMean", dimnames=selVars, 
@@ -555,13 +559,17 @@ psiE      <- mxAlgebra( expression = vec2diag(1/sqrt(diag2vec(PSE))) %&% PSE, na
                         dimnames = list(paste0("E",labs), paste0("E",labs)) )
 
 # Standardized regression paths
-stdBeta   <- mxAlgebra( expression= vec2diag(1/sqrt(diag2vec(V))) %*% BE %*% vec2diag(sqrt(diag2vec(V))), name ="stdBeta", 
+stdBeta   <- mxAlgebra( expression= vec2diag(1/sqrt(diag2vec(V))) %*% BE %*% vec2diag(sqrt(diag2vec(V))), 
+                        name ="stdBeta", 
                         dimnames = list(labs, labs) ) 
-stdBetaA  <- mxAlgebra( expression= vec2diag(1/sqrt(diag2vec(VA))) %*% BEA %*% vec2diag(sqrt(diag2vec(VA))), name ="stdBetaA", 
+stdBetaA  <- mxAlgebra( expression= vec2diag(1/sqrt(diag2vec(VA))) %*% BEA %*% vec2diag(sqrt(diag2vec(VA))), 
+                        name ="stdBetaA", 
                         dimnames = list(paste0("A",labs), paste0("A",labs)) )
-stdBetaC  <- mxAlgebra( expression= vec2diag(1/sqrt(diag2vec(VC))) %*% BEC %*% vec2diag(sqrt(diag2vec(VC))), name ="stdBetaC", 
+stdBetaC  <- mxAlgebra( expression= vec2diag(1/sqrt(diag2vec(VC))) %*% BEC %*% vec2diag(sqrt(diag2vec(VC))), 
+                        name ="stdBetaC", 
                         dimnames = list(paste0("C",labs), paste0("C",labs)) )
-stdBetaE  <- mxAlgebra( expression= vec2diag(1/sqrt(diag2vec(VE))) %*% BEE %*% vec2diag(sqrt(diag2vec(VE))), name ="stdBetaE", 
+stdBetaE  <- mxAlgebra( expression= vec2diag(1/sqrt(diag2vec(VE))) %*% BEE %*% vec2diag(sqrt(diag2vec(VE))), 
+                        name ="stdBetaE", 
                         dimnames = list(paste0("E",labs), paste0("E",labs)) )
 
 ## Create Algebra for Unstandardized and Standardized Variance Components
@@ -605,7 +613,7 @@ write.csv(outCausalA, paste0(outDir,"CLPM_Std_Dep_Smk_TEDS21_26.csv"), quote = F
 
 
 
-#### SubModel 0: Drop Phenotypic Causation/Shared Liabilities ======================
+#### SubModel 0: Drop Phenotypic Causation/Correlated Liabilities ======================
 
 modelcausalA0A <- mxModel(fitcausalA, name = "CLPM_phenoAR_noCL")
 modelcausalA0A <- omxSetParameters(modelcausalA0A,
@@ -782,74 +790,7 @@ sumcausalA5 <- summary(fitcausalA5)
 sumcausalA5
 
 
-#### SubModel 6: DOC Proximal Effects at T1 ======================
-
-modelcausalA6a <- mxModel(fitcausalA5, name = "CLPM_aceAR_DOC1yx_rA")
-modelcausalA6a <- omxSetParameters(modelcausalA6a, 
-                                   labels = c("covExy1"), free = F, values = 0)
-modelcausalA6a <- omxSetParameters(modelcausalA6a, 
-                                   labels = c("Inst_by1x1"), free = T, values = 0.2)
-fitcausalA6a   <- mxRun( modelcausalA6a )
-sumcausalA6a   <- summary(fitcausalA6a )
-sumcausalA6a
-
-
-modelcausalA6b <- mxModel(fitcausalA5, name = "CLPM_aceAR_DOC1xy_rA")
-modelcausalA6b <- omxSetParameters(modelcausalA6b, 
-                                   labels = c("covExy1"), free = F, values = 0)
-modelcausalA6b <- omxSetParameters(modelcausalA6b, 
-                                   labels = c("Inst_bx1y1"), free = T, values = -0.2)
-fitcausalA6b   <- mxRun( modelcausalA6b )
-sumcausalA6b   <- summary(fitcausalA6b )
-sumcausalA6b
-
-
-modelcausalA6c <- mxModel(fitcausalA5, name = "CLPM_aceAR_DOC1yx_rE")
-modelcausalA6c <- omxSetParameters(modelcausalA6c, 
-                                   labels = c("covAxy1"), free = F, values = 0)
-modelcausalA6c <- omxSetParameters(modelcausalA6c, 
-                                   labels = c("Inst_by1x1"), free = T, values = 0.2)
-fitcausalA6c   <- mxRun( modelcausalA6c )
-sumcausalA6c   <- summary(fitcausalA6c )
-sumcausalA6c
-
-
-modelcausalA6d <- mxModel(fitcausalA5, name = "CLPM_aceAR_DOC1xy_rE")
-modelcausalA6d <- omxSetParameters(modelcausalA6d, 
-                                   labels = c("covAxy1"), free = F, values = 0)
-modelcausalA6d <- omxSetParameters(modelcausalA6d, 
-                                   labels = c("Inst_bx1y1"), free = T, values = 0.1)
-fitcausalA6d   <- mxRun( modelcausalA6d )
-sumcausalA6d   <- summary(fitcausalA6d )
-sumcausalA6d
-
-
-modelcausalA6e <- mxModel(fitcausalA5, name = "CLPM_aceAR_DOC1bidir")
-modelcausalA6e <- omxSetParameters(modelcausalA6e, 
-                                   labels = c("covAxy1","covExy1"), free = F, values = 0)
-modelcausalA6e <- omxSetParameters(modelcausalA6e, 
-                                   labels = c("Inst_bx1y1","Inst_by1x1"), free = T, values = -.2)
-fitcausalA6e   <- mxRun( modelcausalA6e )
-sumcausalA6e   <- summary(fitcausalA6e )
-sumcausalA6e
-
-mxCompare(fitcausalA5, list(fitcausalA6e, 
-                            fitcausalA6a, fitcausalA6c,
-                            fitcausalA6b, fitcausalA6d ))
-
-modelcausalA6f <- mxModel(fitcausalA6a, name = "CLPM_aceAR_rA1")
-modelcausalA6f <- omxSetParameters(modelcausalA6f, 
-                                   labels = c("Inst_by1x1"), free = F, values = 0)
-fitcausalA6f   <- mxRun( modelcausalA6f )
-sumcausalA6f   <- summary(fitcausalA6f )
-sumcausalA6f
-
-
-mxCompare(fitcausalA5, list(fitcausalA6a, fitcausalA6f))
-
-
-
-#### SubModel 5: DOC Proximal Effects at T2 ======================
+## CLPM-DOC Proximal Effects at T2 ======================
 
 modelcausalA5a <- mxModel(fitcausalA5, name = "CLPM_aceAR_DOC2yx_rA")
 modelcausalA5a <- omxSetParameters(modelcausalA5a, 
@@ -920,6 +861,8 @@ write.csv(outCausalA5d, paste0(outDir,"CLPM_Biometric_Dep_Smk_TEDS21_26_DOCSmkDe
 sumcausalA5e
 outCausalA5e <- sumcausalA5e$parameters
 write.csv(outCausalA5e, paste0(outDir,"CLPM_Biometric_Dep_Smk_TEDS21_26_DOCbidir.csv"), quote = F)
+
+
 
 
 # Final Models ==========
@@ -1004,6 +947,7 @@ round(mxSE(psiE, model = fitcausalA5), 3)
 
 round(fitcausalA5$US$result[,13:16], 3)
 round(fitcausalA5d$US$result[,21:24], 3)
+
 
 #### CLPM + Bidir DOC model ============================
 

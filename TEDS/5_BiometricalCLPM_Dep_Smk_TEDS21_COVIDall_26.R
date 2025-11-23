@@ -1,5 +1,6 @@
-## Depression + Cigs per Day
-## CLPM - T21 + COVID1-4 + T26 (6 waves)
+## Biometrical CLPM - T21 + COVID1-4 + T26 (6 waves) - Full WLS estimator
+## Depression Sx + Cigs per Day
+## Madhur Singh
 
 rm(list=ls(all=TRUE))
 #
@@ -13,6 +14,8 @@ dataDir <- "Data/"
 outDir  <- "Out/"
 plotDir <- "Plots/"
 logDir  <- "Logs/"
+
+## WLS sum stats from 3_Get_DepSx_CigDay_SumStats_for_WLS.R
 
 load(paste0("Out/MZsumStatDepSmk.RData"))
 str(MZsumStatDepSmk)
@@ -103,7 +106,7 @@ B0_  <- mxMatrix(
   dimnames = list("b0",labs)
 ) 
 B0_
-#
+# Equal means by Twin order
 ExpMean <- mxAlgebra(expression=cbind(b0,b0), name='expMean')
 
 
@@ -142,7 +145,7 @@ for (i in 1:Ts) {
     ## CigDay3L_T_i --> DepSxResRN_T_i+1
     B_vals[paste0("DepSxResRN_T",i+1), paste0("CigDay3L_T",i)] <- bphxy
   }
-  ## Cross-sectional causal paths (for later use with IVs)
+  ## Cross-sectional causal paths (for later use with DOC)
   ## DepSxResRN_T_i --> CigDay3L_T_i
   B_vals[paste0("CigDay3L_T",i), paste0("DepSxResRN_T",i)] <- 0
   ## CigDay3L_T_i --> DepSxResRN_T_i
@@ -169,7 +172,7 @@ for (i in 1:Ts) {
     ## CigDay3L_T_i --> DepSxResRN_T_i+1
     B_free[paste0("DepSxResRN_T",i+1), paste0("CigDay3L_T",i)] <- TRUE
   }
-  ## Cross-sectional causal paths (for later use with IVs)
+  ## Cross-sectional causal paths (for later use with DOC)
   ## DepSxResRN_T_i --> CigDay3L_T_i
   B_free[paste0("CigDay3L_T",i), paste0("DepSxResRN_T",i)] <- FALSE
   ## CigDay3L_T_i --> DepSxResRN_T_i
@@ -589,7 +592,6 @@ modelcausalA <- omxSetParameters(modelcausalA,
                                             paste0("VCy",1:Ts)), free = F, values = 0)
 
 fitcausalA    <- mxRun( modelcausalA) 
-# fitcausalA    <- mxTryHard( modelcausalA, 20) 
 sumcausalA    <- summary( fitcausalA )
 sumcausalA
 
