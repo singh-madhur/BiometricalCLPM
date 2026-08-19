@@ -1,5 +1,22 @@
 # Biometrical CLPM with Two continuous variables
 # MadhurBain Singh, Conor Dolan
+#
+# NOTE: This is the flat, explicit reference specification of the model -- a
+# template to read and copy, not a script to run as-is. The data objects below
+# (datmz_, datdz_, selVars_) are placeholders you must fill in.
+#
+# To APPLY the model to your own data, use the functions in R/biometricalCLPM.R,
+# which build exactly these matrices (same values, labels and free/fixed status)
+# for any number of waves, for continuous and/or ordinal phenotypes, under ML or
+# WLS:
+#
+#   source("R/biometricalCLPM.R")
+#   m0   <- biometricalCLPM("X", "Y", waveLabels = 1:3,
+#                           mzData = datmz_, dzData = datdz_)
+#   fit0 <- mxRun(m0)                        # standard twin CLPM
+#   fit1 <- mxRun(useBiometricalAR(fit0))    # Biometrical CLPM
+#
+# See README.md for the full model sequence.
 
 # Clear Workspace
 rm(list=ls(all=TRUE))
